@@ -11,8 +11,13 @@
         android:theme="@style/Theme.HodHod">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".views.activities.MainActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".views.activities.SplashActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
