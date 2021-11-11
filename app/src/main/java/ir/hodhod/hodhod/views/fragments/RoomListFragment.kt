@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import ir.hodhod.hodhod.databinding.FragmentRoomListBinding
 
-class RoomListFragment : Fragment() {
+class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener {
 
     // region of params
     private var _binding: FragmentRoomListBinding? = null
@@ -33,9 +33,14 @@ class RoomListFragment : Fragment() {
 
     private fun initialView() {
         binding.textViewRoom.setOnClickListener {
-            findNavController().navigate(
-                RoomListFragmentDirections.actionRoomListFragmentToChatFragment()
-            )
+            JoinRoomPopupFragment.getInstance(this)
+                .show(parentFragmentManager, JoinRoomPopupFragment.JOIN_POPUP_TAG)
         }
+    }
+
+    override fun onJoinClickListener(key: String) {
+        findNavController().navigate(
+            RoomListFragmentDirections.actionRoomListFragmentToChatFragment(key)
+        )
     }
 }

@@ -6,15 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import ir.hodhod.hodhod.databinding.FragmentChatBinding
 
 class ChatFragment : Fragment() {
 
     // region of params
+    private val args by navArgs<ChatFragmentArgs>()
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var roomKey: String
     // END of region of params
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        roomKey = args.roomKey
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

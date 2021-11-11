@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/iran_sans_normal_model</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Normal">
+        <item name="android:fontFamily">@font/iran_sans_normal_model</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.NormalWhite">
+        <item name="android:fontFamily">@font/iran_sans_normal_model</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+</resources>
