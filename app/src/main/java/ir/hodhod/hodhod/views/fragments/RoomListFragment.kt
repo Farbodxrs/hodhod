@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import ir.hodhod.hodhod.databinding.FragmentRoomListBinding
+import ir.hodhod.hodhod.models.RoomModel
+import ir.hodhod.hodhod.views.adapters.RoomAdapter
 
 class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener {
 
@@ -36,6 +39,13 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener {
             JoinRoomPopupFragment.getInstance(this)
                 .show(parentFragmentManager, JoinRoomPopupFragment.JOIN_POPUP_TAG)
         }
+        binding.roomListRV.layoutManager = LinearLayoutManager(requireContext())
+        binding.roomListRV.adapter = RoomAdapter(
+            listOf(
+                RoomModel("Room 01"),
+                RoomModel("Best room in the world")
+            )
+        )
     }
 
     override fun onJoinClickListener(key: String) {
