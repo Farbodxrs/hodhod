@@ -11,7 +11,7 @@ import ir.hodhod.hodhod.databinding.FragmentRoomListBinding
 import ir.hodhod.hodhod.models.RoomModel
 import ir.hodhod.hodhod.views.adapters.RoomAdapter
 
-class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener {
+class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, View.OnClickListener {
 
     // region of params
     private var _binding: FragmentRoomListBinding? = null
@@ -35,10 +35,6 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener {
     }
 
     private fun initialView() {
-        binding.textViewRoom.setOnClickListener {
-            JoinRoomPopupFragment.getInstance(this)
-                .show(parentFragmentManager, JoinRoomPopupFragment.JOIN_POPUP_TAG)
-        }
         binding.roomListRV.layoutManager = LinearLayoutManager(requireContext())
         binding.roomListRV.adapter = RoomAdapter(
             listOf(
@@ -46,11 +42,20 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener {
                 RoomModel("Best room in the world")
             )
         )
+
+        binding.textViewRoom.setOnClickListener(this)
     }
 
     override fun onJoinClickListener(key: String) {
         findNavController().navigate(
             RoomListFragmentDirections.actionRoomListFragmentToChatFragment(key)
         )
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            binding.textViewRoom -> JoinRoomPopupFragment.getInstance(this)
+                .show(parentFragmentManager, JoinRoomPopupFragment.JOIN_POPUP_TAG)
+        }
     }
 }

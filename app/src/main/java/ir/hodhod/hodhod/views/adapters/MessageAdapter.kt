@@ -1,4 +1,4 @@
-package ir.hodhod.hodhod.views.activities
+package ir.hodhod.hodhod.views.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ir.hodhod.hodhod.R
-import ir.hodhod.hodhod.views.model.Message
+import ir.hodhod.hodhod.models.MessageModel
 
 
-class MessagingAdapter(
-    private val dataset: List<Message>
-) : RecyclerView.Adapter<MessagingAdapter.MessageViewHolder>() {
+class MessageAdapter(
+    private val dataset: List<MessageModel>
+) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
 
-    class MessageViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.my_message)
         val otherTextView: TextView = itemView.findViewById(R.id.other_message)
     }
@@ -29,6 +29,7 @@ class MessagingAdapter(
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val item = dataset[position]
+
         if (item.fromMe) {
             holder.textView.text = item.content
             holder.otherTextView.visibility = View.GONE

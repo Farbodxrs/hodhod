@@ -10,8 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import ir.hodhod.hodhod.databinding.FragmentChatBinding
-import ir.hodhod.hodhod.views.activities.MessagingAdapter
-import ir.hodhod.hodhod.views.data.Datasource
+import ir.hodhod.hodhod.models.MessageModel
+import ir.hodhod.hodhod.views.adapters.MessageAdapter
 
 class ChatFragment : Fragment(), View.OnClickListener {
 
@@ -51,9 +51,15 @@ class ChatFragment : Fragment(), View.OnClickListener {
         binding.chatTitleTextView.text = roomKey
 
         binding.messageList.layoutManager = LinearLayoutManager(requireContext())
-        binding.messageList.adapter = MessagingAdapter(
-            Datasource().loadMessages()
+        binding.messageList.adapter = MessageAdapter(
+            listOf(
+                MessageModel("این پیام برای تست است.", false),
+                MessageModel("باشه.", false),
+                MessageModel("سلام به همگی", true),
+                MessageModel("سلام", false)
+            )
         )
+
         binding.chatBackImageView.setOnClickListener(this)
     }
 
