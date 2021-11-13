@@ -8,7 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import ir.hodhod.hodhod.databinding.FragmentChatBinding
+import ir.hodhod.hodhod.views.activities.MessagingAdapter
+import ir.hodhod.hodhod.views.data.Datasource
 
 class ChatFragment : Fragment(), View.OnClickListener {
 
@@ -47,13 +50,15 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private fun initialView() {
         binding.chatTitleTextView.text = roomKey
 
-        binding.textViewChat.setOnClickListener(this)
+        binding.messageList.layoutManager = LinearLayoutManager(requireContext())
+        binding.messageList.adapter = MessagingAdapter(
+            Datasource().loadMessages()
+        )
         binding.chatBackImageView.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.textViewChat,
             binding.chatBackImageView -> navController.navigateUp()
         }
     }

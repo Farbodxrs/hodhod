@@ -1,4 +1,3 @@
 package ir.hodhod.hodhod.views.model
 
-class Message {
-}
+data class Message(val content: String, val fromMe: Boolean)
