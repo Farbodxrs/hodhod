@@ -76,7 +76,7 @@
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:layout_weight=".5"
-            android:background="@drawable/round_button"
+            android:background="@drawable/round_rectangle"
             android:backgroundTint="@android:color/white"
             android:hint="Type a message..."
             android:importantForAutofill="no"

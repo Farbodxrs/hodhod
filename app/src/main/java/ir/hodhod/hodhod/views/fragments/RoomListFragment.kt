@@ -31,31 +31,41 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (roomList == null) roomList = mutableListOf()
+
         initialView()
     }
 
     private fun initialView() {
         binding.roomListRV.layoutManager = LinearLayoutManager(requireContext())
-        binding.roomListRV.adapter = RoomAdapter(
-            listOf(
-                RoomModel("Room 01"),
-                RoomModel("Best room in the world")
-            )
-        )
+        binding.roomListRV.adapter = RoomAdapter(roomList ?: mutableListOf())
 
-        binding.textViewRoom.setOnClickListener(this)
+        binding.btnAddRoom.setOnClickListener(this)
     }
 
     override fun onJoinClickListener(key: String) {
+        roomList?.add(RoomModel(key))
+
         findNavController().navigate(
             RoomListFragmentDirections.actionRoomListFragmentToChatFragment(key)
         )
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     override fun onClick(v: View?) {
         when (v) {
-            binding.textViewRoom -> JoinRoomPopupFragment.getInstance(this)
+            binding.btnAddRoom -> JoinRoomPopupFragment.getInstance(this)
                 .show(parentFragmentManager, JoinRoomPopupFragment.JOIN_POPUP_TAG)
         }
+    }
+
+    companion object {
+
+        // TODO: we should get room list from database, it's a temporary solution!
+        private var roomList: MutableList<RoomModel>? = null
     }
 }

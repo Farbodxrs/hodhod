@@ -63,6 +63,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
         binding.chatBackImageView.setOnClickListener(this)
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     override fun onClick(v: View?) {
         when (v) {
             binding.chatBackImageView -> navController.navigateUp()
