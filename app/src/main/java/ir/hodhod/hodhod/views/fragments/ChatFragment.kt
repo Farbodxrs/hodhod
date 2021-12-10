@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.databinding.FragmentChatBinding
 import ir.hodhod.hodhod.models.MessageModel
@@ -19,12 +20,16 @@ import ir.hodhod.hodhod.viewmodels.SharedViewModel
 import ir.hodhod.hodhod.views.adapters.MessageAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.random.Random
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class ChatFragment : Fragment(), View.OnClickListener {
 
     // region of params
+    private val listData =  mutableListOf<MessageModel>()
     private val sharedViewModel by viewModels<SharedViewModel>()
     private val args by navArgs<ChatFragmentArgs>()
     private var _binding: FragmentChatBinding? = null
@@ -36,7 +41,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         roomKey = args.roomKey
     }
 
@@ -64,17 +68,17 @@ class ChatFragment : Fragment(), View.OnClickListener {
         binding.chatTitleTextView.text = roomKey
 
         binding.messageList.layoutManager = LinearLayoutManager(requireContext())
-        binding.messageList.adapter = MessageAdapter(
-            listOf(
-                MessageModel("این پیام برای تست است.", false),
-                MessageModel("باشه.", false),
-                MessageModel("سلام به همگی", true),
-                MessageModel("سلام", false)
-            )
+        binding.messageList.adapter = MessageAdapter( listData
+            /*listOf(
+                MessageModel("این پیام برای تست است.", false, 1366713508000, "sama"),
+                MessageModel("باشه.", false, 1366713508000, "sepehr"),
+                MessageModel("سلام به همگی", true,1366713508000, "sama"),
+                MessageModel("سلام", false,1366713508000, "sepehr")
+            )*/
         )
-
         binding.chatBackImageView.setOnClickListener(this)
         binding.chatTitleTextView.setOnClickListener(this)
+        binding.btnSend.setOnClickListener(this)
     }
 
     private fun subscribeViews() {
@@ -126,7 +130,15 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 val rand = Random.nextInt(1000)
                 Log.d("MQTTBrokerRepository", "$rand")
 
-                sharedViewModel.publishMessage(roomKey, "rand num: $rand")
+            }
+
+            binding.btnSend -> {
+                val msg : String  = binding.txtMessage.text.toString()
+                listData.add(listData.size, MessageModel(msg, true, System.currentTimeMillis() , "sama"))
+                binding.messageList.adapter?.notifyItemInserted(listData.size)
+                val gson = Gson()
+                val gsonPretty = GsonBuilder().setPrettyPrinting().create()
+                sharedViewModel.publishMessage(roomKey, gsonPretty.toJson(listData[listData.size -1]))
             }
         }
     }
