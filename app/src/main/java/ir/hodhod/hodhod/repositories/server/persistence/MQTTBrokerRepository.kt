@@ -59,7 +59,14 @@ class MQTTBrokerRepository @Inject constructor(private val mqttClient: MqttAndro
 
             override fun deliveryComplete(token: IMqttDeliveryToken?) {
                 Log.d("MQTTBrokerRepository", "delivery complete")
-                offer(BaseResult.Success(Unit))
+
+                // TODO: we have to find a better solution here!
+                try {
+                    offer(BaseResult.Success(Unit))
+                } catch (e: Exception) {
+                    Log.d("MQTTBrokerRepository", "on message deliver exception -> ${e.message}")
+                    e.printStackTrace()
+                }
             }
         })
     }

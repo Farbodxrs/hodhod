@@ -1,21 +1,31 @@
 package ir.hodhod.hodhod.views.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.databinding.FragmentChatBinding
 import ir.hodhod.hodhod.models.MessageModel
+import ir.hodhod.hodhod.viewmodels.SharedViewModel
 import ir.hodhod.hodhod.views.adapters.MessageAdapter
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlin.random.Random
 
+@ExperimentalCoroutinesApi
+@AndroidEntryPoint
 class ChatFragment : Fragment(), View.OnClickListener {
 
     // region of params
+    private val sharedViewModel by viewModels<SharedViewModel>()
     private val args by navArgs<ChatFragmentArgs>()
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
@@ -45,6 +55,9 @@ class ChatFragment : Fragment(), View.OnClickListener {
         navController = findNavController()
 
         initialView()
+        subscribeViews()
+
+        sharedViewModel.setMessageCallback()
     }
 
     private fun initialView() {
@@ -61,6 +74,39 @@ class ChatFragment : Fragment(), View.OnClickListener {
         )
 
         binding.chatBackImageView.setOnClickListener(this)
+        binding.chatTitleTextView.setOnClickListener(this)
+    }
+
+    private fun subscribeViews() {
+        sharedViewModel.publishRespond.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "published successfully", Toast.LENGTH_SHORT).show()
+        }
+
+        sharedViewModel.publishError.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "publish failed", Toast.LENGTH_SHORT).show()
+        }
+
+        sharedViewModel.messageDeliver.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "message delivered successfully", Toast.LENGTH_SHORT)
+                .show()
+        }
+
+        sharedViewModel.messageArrived.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "message arrived successfully", Toast.LENGTH_SHORT)
+                .show()
+        }
+
+        sharedViewModel.connectionLost.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "connection lost", Toast.LENGTH_SHORT).show()
+        }
+
+        sharedViewModel.unsubscribeRespond.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "unsubscribed successfully", Toast.LENGTH_SHORT).show()
+        }
+
+        sharedViewModel.unsubscribeError.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "unsubscribe failed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {
@@ -70,7 +116,18 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.chatBackImageView -> navController.navigateUp()
+            binding.chatBackImageView -> {
+                sharedViewModel.unsubscribeFromTopic(roomKey)
+
+                navController.navigateUp()
+            }
+
+            binding.chatTitleTextView -> {
+                val rand = Random.nextInt(1000)
+                Log.d("MQTTBrokerRepository", "$rand")
+
+                sharedViewModel.publishMessage(roomKey, "rand num: $rand")
+            }
         }
     }
 }
