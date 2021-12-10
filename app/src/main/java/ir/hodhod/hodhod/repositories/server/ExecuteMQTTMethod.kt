@@ -1,9 +1,9 @@
 package ir.hodhod.hodhod.repositories.server
 
 import ir.hodhod.hodhod.repositories.server.persistence.BaseResult
+import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.IMqttActionListener
 import org.eclipse.paho.client.mqttv3.IMqttToken
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient
 
 
 /**
@@ -15,28 +15,32 @@ import org.eclipse.paho.client.mqttv3.MqttAsyncClient
  *
  * @return [IMqttToken] that is returned by `block` if it is run successfully, `null` otherwise.
  * */
-inline fun MqttAsyncClient.executeMethod(
-    block: MqttAsyncClient.() -> IMqttToken,
+inline fun MqttAndroidClient.executeMethod(
+    block: MqttAndroidClient.() -> IMqttToken,
     crossinline onSuccess: () -> Unit,
     crossinline onError: (String?) -> Unit = {}
-): BaseResult<IMqttToken, String> = try {
+): BaseResult<IMqttToken, String> {
 
-    BaseResult.Success(block().apply {
+    try {
+        val token = block().apply {
 
-        actionCallback = object : IMqttActionListener {
-            override fun onSuccess(asyncActionToken: IMqttToken?) {
-                onSuccess()
-            }
+            actionCallback = object : IMqttActionListener {
+                override fun onSuccess(asyncActionToken: IMqttToken?) {
+                    onSuccess()
+                }
 
-            override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                throw exception ?: Exception("request failed.")
+                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                    throw exception ?: Exception("request failed.")
+                }
             }
         }
-    })
 
-} catch (e: Exception) {
-    e.printStackTrace()
-    onError(e.message)
+        return BaseResult.Success(token)
 
-    BaseResult.Error(e.message)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        onError(e.message)
+
+        return BaseResult.Error(e.message)
+    }
 }

@@ -5,15 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.databinding.FragmentRoomListBinding
 import ir.hodhod.hodhod.models.RoomModel
+import ir.hodhod.hodhod.viewmodels.SharedViewModel
 import ir.hodhod.hodhod.views.adapters.RoomAdapter
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
+@AndroidEntryPoint
 class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, View.OnClickListener {
 
     // region of params
+    private val sharedViewModel by viewModels<SharedViewModel>()
     private var _binding: FragmentRoomListBinding? = null
     private val binding get() = _binding!!
 
@@ -34,6 +41,8 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
         if (roomList == null) roomList = mutableListOf()
 
         initialView()
+
+        sharedViewModel.connectToServer()
     }
 
     private fun initialView() {
