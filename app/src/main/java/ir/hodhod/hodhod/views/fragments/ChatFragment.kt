@@ -1,7 +1,6 @@
 package ir.hodhod.hodhod.views.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +11,13 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.threetenabp.AndroidThreeTen
+import com.google.gson.GsonBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.databinding.FragmentChatBinding
 import ir.hodhod.hodhod.models.MessageModel
 import ir.hodhod.hodhod.viewmodels.SharedViewModel
 import ir.hodhod.hodhod.views.adapters.MessageAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlin.random.Random
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 
 
 @ExperimentalCoroutinesApi
@@ -29,7 +25,6 @@ import com.google.gson.GsonBuilder
 class ChatFragment : Fragment(), View.OnClickListener {
 
     // region of params
-    private val listData =  mutableListOf<MessageModel>()
     private val sharedViewModel by viewModels<SharedViewModel>()
     private val args by navArgs<ChatFragmentArgs>()
     private var _binding: FragmentChatBinding? = null
@@ -37,6 +32,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     private lateinit var navController: NavController
     private lateinit var roomKey: String
+    private val listData = mutableListOf<MessageModel>()
     // END of region of params
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,22 +58,24 @@ class ChatFragment : Fragment(), View.OnClickListener {
         subscribeViews()
 
         sharedViewModel.setMessageCallback()
+
+        listData.addAll(
+            listOf(
+                MessageModel("این پیام برای تست است.", false, 1366713508000, "sama"),
+                MessageModel("باشه.", false, 1366813508000, "sepehr"),
+                MessageModel("سلام به همگی", true, 1366913508000, "sama"),
+                MessageModel("سلام", false, 1367713508000, "sepehr")
+            )
+        )
     }
 
     private fun initialView() {
         binding.chatTitleTextView.text = roomKey
 
         binding.messageList.layoutManager = LinearLayoutManager(requireContext())
-        binding.messageList.adapter = MessageAdapter( listData
-            /*listOf(
-                MessageModel("این پیام برای تست است.", false, 1366713508000, "sama"),
-                MessageModel("باشه.", false, 1366713508000, "sepehr"),
-                MessageModel("سلام به همگی", true,1366713508000, "sama"),
-                MessageModel("سلام", false,1366713508000, "sepehr")
-            )*/
-        )
+        binding.messageList.adapter = MessageAdapter(listData)
+
         binding.chatBackImageView.setOnClickListener(this)
-        binding.chatTitleTextView.setOnClickListener(this)
         binding.btnSend.setOnClickListener(this)
     }
 
@@ -126,19 +124,22 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 navController.navigateUp()
             }
 
-            binding.chatTitleTextView -> {
-                val rand = Random.nextInt(1000)
-                Log.d("MQTTBrokerRepository", "$rand")
-
-            }
-
             binding.btnSend -> {
-                val msg : String  = binding.txtMessage.text.toString()
-                listData.add(listData.size, MessageModel(msg, true, System.currentTimeMillis() , "sama"))
+                val msg = binding.txtMessage.text.toString()
+                listData.add(
+                    listData.size,
+                    MessageModel(msg, true, System.currentTimeMillis(), "sama")
+                )
                 binding.messageList.adapter?.notifyItemInserted(listData.size)
-                val gson = Gson()
+
                 val gsonPretty = GsonBuilder().setPrettyPrinting().create()
-                sharedViewModel.publishMessage(roomKey, gsonPretty.toJson(listData[listData.size -1]))
+                sharedViewModel.publishMessage(
+                    roomKey,
+                    gsonPretty.toJson(listData[listData.size - 1])
+                )
+
+                binding.txtMessage.setText("")
+                binding.messageList.scrollToPosition(listData.size - 1)
             }
         }
     }
