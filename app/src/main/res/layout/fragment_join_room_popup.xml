@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FEF3FF"
+    >
 
     <TextView
         android:id="@+id/joinTitleTextView"
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="@color/design_default_color_secondary_variant"
+        android:background="#FF8EA0"
         android:gravity="center"
         android:text="@string/join_room"
+        android:textColor="#007C93"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center_horizontal"
         android:hint="@string/enter_key"
         android:imeOptions="actionGo"
@@ -45,12 +49,15 @@
         android:layout_height="56dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="#FF7237"
         android:text="@string/enter"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/joinGuideline"
-        app:layout_constraintTop_toBottomOf="@id/joinEditText" />
+        app:layout_constraintTop_toBottomOf="@id/joinEditText"
+
+
+        />
 
     <Button
         android:id="@+id/joinButtonCancel"
@@ -59,11 +66,20 @@
         android:layout_height="56dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/design_default_color_error"
+        android:backgroundTint="#B00020"
         android:text="@string/cancel"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/joinGuideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/joinEditText" />
+
+    <ImageView
+        android:id="@+id/imageViewLogo"
+
+        android:layout_width="match_parent"
+        android:layout_height="1000dp"
+        android:src="@drawable/logo"
+        android:alpha=".25"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
