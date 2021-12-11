@@ -43,4 +43,9 @@ class RoomAdapter(
      * Return the size of your dataset (invoked by the layout manager)
      */
     override fun getItemCount() = dataset.size
+
+    interface ItemClickLister {
+        fun onItemClickListener(key: String)
+    }
 }
+
