@@ -17,12 +17,12 @@ import org.eclipse.paho.client.mqttv3.IMqttToken
  * */
 inline fun MqttAndroidClient.executeMethod(
     block: MqttAndroidClient.() -> IMqttToken,
-    crossinline onSuccess: () -> Unit,
-    crossinline onError: (String?) -> Unit = {}
-): BaseResult<IMqttToken, String> {
+    crossinline onSuccess: () -> BaseResult.Success<Unit>,
+    crossinline onError: (String?) -> BaseResult.Error<String>
+): BaseResult<Unit, String> {
 
     try {
-        val token = block().apply {
+        block().apply {
 
             actionCallback = object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
@@ -30,12 +30,13 @@ inline fun MqttAndroidClient.executeMethod(
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                    throw exception ?: Exception("request failed.")
+                    exception?.printStackTrace()
+                    onError(exception?.message)
                 }
             }
         }
 
-        return BaseResult.Success(token)
+        return BaseResult.Success(Unit)
 
     } catch (e: Exception) {
         e.printStackTrace()

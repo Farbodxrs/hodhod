@@ -1,6 +1,5 @@
 package ir.hodhod.hodhod.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hodhod.hodhod.repositories.server.persistence.BaseResult
 import ir.hodhod.hodhod.repositories.server.persistence.MQTTBrokerRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -94,17 +92,22 @@ class SharedViewModel @Inject constructor(private val mqttBrokerRepository: MQTT
 
     fun setMessageCallback() {
         viewModelScope.launch {
-            mqttBrokerRepository.setMessageCallback().collect {
-                Log.d("MQTTBrokerRepository", "hey $it")
-                when (it) {
-                    is BaseResult.Success -> {
-                        if (it.data is Unit)
-                            messageDeliver.value = Unit
-                        else messageArrived.value = it.data.toString()
-                    }
-                    is BaseResult.Error -> connectionLost.value = it.message
-                }
-            }
+            mqttBrokerRepository.setMessageCallback(
+                messageDeliver,
+                messageArrived,
+                connectionLost
+            )
+//                .collect {
+//                Log.d("MQTTBrokerRepository", "hey $it")
+//                when (it) {
+//                    is BaseResult.Success -> {
+//                        if (it.data is Unit)
+//                            messageDeliver.value = Unit
+//                        else messageArrived.value = it.data.toString()
+//                    }
+//                    is BaseResult.Error -> connectionLost.value = it.message
+//                }
+//            }
         }
     }
 }
