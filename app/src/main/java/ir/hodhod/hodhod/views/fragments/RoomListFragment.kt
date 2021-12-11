@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.databinding.FragmentRoomListBinding
 import ir.hodhod.hodhod.models.RoomModel
+import ir.hodhod.hodhod.utilz.UsernameSharedPreferences
 import ir.hodhod.hodhod.viewmodels.SharedViewModel
 import ir.hodhod.hodhod.views.adapters.RoomAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -24,6 +26,12 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
     private val sharedViewModel by viewModels<SharedViewModel>()
     private var _binding: FragmentRoomListBinding? = null
     private val binding get() = _binding!!
+
+    private val userPreference: UsernameSharedPreferences by lazy {
+        UsernameSharedPreferences.initialWith(
+            requireContext().applicationContext
+        )
+    }
 
     // END of region of params
 
@@ -43,6 +51,11 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
 
         initialView()
         subscribeViews()
+
+        userPreference.getUsername() ?: apply {
+            var name = "user-${Random.nextInt(1000, 10000)}"
+            userPreference.saveUsername(name)
+        }
     }
 
     private fun initialView() {
