@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
-    android:background="@color/purple_700">
+    android:background="#FF8EA0"
+    >
 
     <TextView
         android:id="@+id/textViewItemRoom"
