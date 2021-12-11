@@ -4,7 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_200">
+    android:background="#0086BE">
+
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bottle"
+
+        android:alpha="0.1"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/roomListRV"
@@ -12,7 +20,13 @@
         android:layout_height="match_parent"
         android:layout_margin="16dp"
         tools:itemCount="4"
-        tools:listitem="@layout/item_room" />
+        tools:listitem="@layout/item_room"
+        android:background="@android:color/transparent"
+
+
+        />
+
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAddRoom"
@@ -21,7 +35,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/round_button"
-        android:backgroundTint="@color/design_default_color_secondary_variant"
+        android:backgroundTint="#FF7237"
         android:text="@string/plus"
         android:textColor="@color/white"
         android:textSize="32sp"
