@@ -96,6 +96,19 @@ class ChatFragment : Fragment(), View.OnClickListener {
         sharedViewModel.messageArrived.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "message arrived successfully", Toast.LENGTH_SHORT)
                 .show()
+
+            val gsonPretty = GsonBuilder().setPrettyPrinting().create()
+            val message = gsonPretty.fromJson(it, MessageModel::class.java)
+
+            if (message.username != "sama") {
+                listData.add(
+                    listData.size,
+                    with(message) {
+                        MessageModel(content, false, time, username)
+                    }
+                )
+                binding.messageList.adapter?.notifyItemInserted(listData.size)
+            }
         }
 
         sharedViewModel.connectionLost.observe(viewLifecycleOwner) {
@@ -135,7 +148,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 val gsonPretty = GsonBuilder().setPrettyPrinting().create()
                 sharedViewModel.publishMessage(
                     roomKey,
-                    gsonPretty.toJson(listData[listData.size - 1])
+                    gsonPretty.toJson(listData.last())
                 )
 
                 binding.txtMessage.setText("")
