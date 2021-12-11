@@ -20,19 +20,17 @@ import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, View.OnClickListener, RoomAdapter.ItemClickLister {
+class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, View.OnClickListener,
+    RoomAdapter.ItemClickListener {
 
     // region of params
     private val sharedViewModel by viewModels<SharedViewModel>()
     private var _binding: FragmentRoomListBinding? = null
     private val binding get() = _binding!!
 
-    private val userPreference: UsernameSharedPreferences by lazy {
-        UsernameSharedPreferences.initialWith(
-            requireContext().applicationContext
-        )
+    private val userPreference by lazy {
+        UsernameSharedPreferences.initialWith(requireContext().applicationContext)
     }
-
     // END of region of params
 
 
@@ -53,15 +51,12 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
         initialView()
         subscribeViews()
 
-        userPreference.getUsername() ?: apply {
-            var name = "user-${Random.nextInt(1000, 10000)}"
-            userPreference.saveUsername(name)
-        }
+        setUsername()
     }
 
     private fun initialView() {
         binding.roomListRV.layoutManager = LinearLayoutManager(requireContext())
-        binding.roomListRV.adapter = RoomAdapter(roomList ?: mutableListOf())
+        binding.roomListRV.adapter = RoomAdapter(roomList ?: mutableListOf(), this)
 
         binding.btnAddRoom.setOnClickListener(this)
     }
@@ -73,6 +68,17 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
 
         sharedViewModel.subscribeError.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "subscribe failed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setUsername() {
+        userPreference.getUsername()?.also {
+            binding.usernameTextView.text = it
+        } ?: apply {
+            val name = "user-${Random.nextInt(1000, 10000)}"
+            userPreference.saveUsername(name)
+
+            binding.usernameTextView.text = name
         }
     }
 
@@ -104,7 +110,6 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
         findNavController().navigate(
             RoomListFragmentDirections.actionRoomListFragmentToChatFragment(key)
         )
-
     }
 
     companion object {

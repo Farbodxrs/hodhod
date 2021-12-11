@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.databinding.FragmentChatBinding
 import ir.hodhod.hodhod.models.MessageModel
+import ir.hodhod.hodhod.utilz.UsernameSharedPreferences
 import ir.hodhod.hodhod.viewmodels.SharedViewModel
 import ir.hodhod.hodhod.views.adapters.MessageAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,8 +31,13 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
 
+    private val userPreference by lazy {
+        UsernameSharedPreferences.initialWith(requireContext().applicationContext)
+    }
+
     private lateinit var navController: NavController
     private lateinit var roomKey: String
+    private lateinit var username: String
     private val listData = mutableListOf<MessageModel>()
     // END of region of params
 
@@ -59,14 +65,16 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
         sharedViewModel.setMessageCallback()
 
-        listData.addAll(
-            listOf(
-                MessageModel("این پیام برای تست است.", false, 1366713508000, "sama"),
-                MessageModel("باشه.", false, 1366813508000, "sepehr"),
-                MessageModel("سلام به همگی", true, 1366913508000, "sama"),
-                MessageModel("سلام", false, 1367713508000, "sepehr")
-            )
-        )
+        username = userPreference.getUsername() ?: ""
+
+//        listData.addAll(
+//            listOf(
+//                MessageModel("این پیام برای تست است.", false, 1366713508000, "sama"),
+//                MessageModel("باشه.", false, 1366813508000, "sepehr"),
+//                MessageModel("سلام به همگی", true, 1366913508000, "sama"),
+//                MessageModel("سلام", false, 1367713508000, "sepehr")
+//            )
+//        )
     }
 
     private fun initialView() {
@@ -100,7 +108,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
             val gsonPretty = GsonBuilder().setPrettyPrinting().create()
             val message = gsonPretty.fromJson(it, MessageModel::class.java)
 
-            if (message.username != "sama") {
+            if (message.username != username) {
                 listData.add(
                     listData.size,
                     with(message) {
@@ -141,7 +149,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 val msg = binding.txtMessage.text.toString()
                 listData.add(
                     listData.size,
-                    MessageModel(msg, true, System.currentTimeMillis(), "sama")
+                    MessageModel(msg, true, System.currentTimeMillis(), username)
                 )
                 binding.messageList.adapter?.notifyItemInserted(listData.size)
 

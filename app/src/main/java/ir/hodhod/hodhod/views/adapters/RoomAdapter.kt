@@ -9,7 +9,8 @@ import ir.hodhod.hodhod.R
 import ir.hodhod.hodhod.models.RoomModel
 
 class RoomAdapter(
-    private val dataset: List<RoomModel>
+    private val dataset: List<RoomModel>,
+    private val listener: ItemClickListener
 ) : RecyclerView.Adapter<RoomAdapter.ItemViewHolder>() {
 
     // Provide a reference to the views for each data item
@@ -37,6 +38,7 @@ class RoomAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
         holder.textView.text = item.key
+        holder.itemView.setOnClickListener { listener.onItemClickListener(item.key) }
     }
 
     /**
@@ -44,7 +46,7 @@ class RoomAdapter(
      */
     override fun getItemCount() = dataset.size
 
-    interface ItemClickLister {
+    interface ItemClickListener {
         fun onItemClickListener(key: String)
     }
 }

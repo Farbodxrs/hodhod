@@ -7,7 +7,9 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import ir.hodhod.hodhod.R
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 

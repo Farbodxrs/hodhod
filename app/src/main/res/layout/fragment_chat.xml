@@ -9,11 +9,9 @@
     <androidx.constraintlayout.widget.Group
         android:layout_width="match_parent"
         android:layout_height="0dp"
-
-        app:layout_constraintBottom_toTopOf="@id/chatTopLineView"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="#FF8EA0"
-        />
+        app:layout_constraintBottom_toTopOf="@id/chatTopLineView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/chatMoreImageView"
@@ -39,9 +37,8 @@
         app:layout_constraintBottom_toBottomOf="@id/chatTopLineView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription"
         app:tint="#008ADD"
-        />
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/chatTitleTextView"
@@ -49,12 +46,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:textColor="#006F65"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="RoomKey"
-        android:textColor="#006F65"
-        />
+        tools:text="RoomKey" />
 
     <View
         android:id="@+id/chatTopLineView"
@@ -112,12 +108,11 @@
             android:layout_gravity="bottom"
             android:layout_marginEnd="7dp"
             android:layout_marginBottom="1.5dp"
+            android:backgroundTint="#FF7237"
             android:clickable="true"
             android:gravity="center"
             android:text="SEND"
-            android:textSize="14sp"
-            android:backgroundTint="#FF7237"
-            />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -128,9 +123,6 @@
         android:layout_marginTop="12dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/layoutMessageArea"
-        app:layout_constraintTop_toTopOf="@id/chatTopLineView"
-        android:background="@drawable/paper_fly"
-        android:alpha="0.1"
-        />
+        app:layout_constraintTop_toTopOf="@id/chatTopLineView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
