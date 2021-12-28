@@ -183,7 +183,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
             if (message.username != username) {
                 chatListData.add(
-                    chatListData.size,
                     with(message) {
                         MessageModel(
                             content,
