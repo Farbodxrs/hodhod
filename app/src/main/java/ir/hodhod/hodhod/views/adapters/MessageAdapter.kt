@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ir.hodhod.hodhod.R
-import ir.hodhod.hodhod.models.MessageModel
+import ir.hodhod.hodhod.data.models.MessageModel
 import ir.hodhod.hodhod.utils.DateUtil
 
 

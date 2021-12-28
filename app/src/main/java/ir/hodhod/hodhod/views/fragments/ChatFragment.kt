@@ -13,9 +13,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import ir.hodhod.hodhod.data.models.MessageModel
 import ir.hodhod.hodhod.databinding.FragmentChatBinding
-import ir.hodhod.hodhod.models.MessageModel
-import ir.hodhod.hodhod.utilz.UsernameSharedPreferences
+import ir.hodhod.hodhod.utils.UsernameSharedPreferences
 import ir.hodhod.hodhod.viewmodels.SharedViewModel
 import ir.hodhod.hodhod.views.adapters.MessageAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi

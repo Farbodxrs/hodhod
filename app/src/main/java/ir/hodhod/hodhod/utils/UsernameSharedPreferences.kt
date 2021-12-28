@@ -1,4 +1,4 @@
-package ir.hodhod.hodhod.utilz
+package ir.hodhod.hodhod.utils
 
 import android.content.Context
 import android.content.SharedPreferences

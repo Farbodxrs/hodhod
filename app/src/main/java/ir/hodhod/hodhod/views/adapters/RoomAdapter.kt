@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ir.hodhod.hodhod.R
-import ir.hodhod.hodhod.models.RoomModel
+import ir.hodhod.hodhod.data.models.RoomModel
 
 class RoomAdapter(
     private val dataset: List<RoomModel>,

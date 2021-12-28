@@ -6,9 +6,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ir.hodhod.hodhod.Constants
 import ir.hodhod.hodhod.repositories.server.persistence.MQTTBrokerRepository
-import ir.hodhod.hodhod.utilz.UsernameSharedPreferences
+import ir.hodhod.hodhod.utils.Constants
+import ir.hodhod.hodhod.utils.UsernameSharedPreferences
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.eclipse.paho.android.service.MqttAndroidClient
 import javax.inject.Singleton

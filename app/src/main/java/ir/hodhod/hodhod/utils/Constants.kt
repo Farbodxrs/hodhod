@@ -1,4 +1,4 @@
-package ir.hodhod.hodhod
+package ir.hodhod.hodhod.utils
 
 object Constants {
 

@@ -10,9 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import ir.hodhod.hodhod.data.models.RoomModel
 import ir.hodhod.hodhod.databinding.FragmentRoomListBinding
-import ir.hodhod.hodhod.models.RoomModel
-import ir.hodhod.hodhod.utilz.UsernameSharedPreferences
+import ir.hodhod.hodhod.utils.UsernameSharedPreferences
 import ir.hodhod.hodhod.viewmodels.SharedViewModel
 import ir.hodhod.hodhod.views.adapters.RoomAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi

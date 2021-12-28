@@ -1,4 +1,4 @@
-package ir.hodhod.hodhod.models
+package ir.hodhod.hodhod.data.models
 
 data class MessageModel(
     val content: String,
