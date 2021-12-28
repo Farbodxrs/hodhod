@@ -13,6 +13,6 @@ interface RoomDao : GeneralDao {
     @Delete
     suspend fun deleteRoom(roomEntity: RoomEntity)
 
-    @Query("SELECT * FROM room")
+    @Query("SELECT * FROM room ORDER BY time DESC")
     suspend fun getAllRooms(): List<RoomEntity>
 }

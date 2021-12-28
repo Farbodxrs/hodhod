@@ -6,10 +6,10 @@ import ir.hodhod.hodhod.data.models.RoomModel
 object RoomLocalMapper {
 
     fun toDomain(roomEntity: RoomEntity) = roomEntity.run {
-        RoomModel(roomKey)
+        RoomModel(roomKey, time)
     }
 
     fun fromDomain(roomModel: RoomModel) = roomModel.run {
-        RoomEntity(key)
+        RoomEntity(key, time)
     }
 }

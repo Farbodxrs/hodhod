@@ -30,6 +30,7 @@ import ir.hodhod.hodhod.data.models.MessageModel
 import ir.hodhod.hodhod.databinding.FragmentChatBinding
 import ir.hodhod.hodhod.utils.UsernameSharedPreferences
 import ir.hodhod.hodhod.viewmodels.BrokerSharedViewModel
+import ir.hodhod.hodhod.viewmodels.ChatViewModel
 import ir.hodhod.hodhod.views.adapters.MessageAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.*
@@ -41,6 +42,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     // region of params
     private val brokerSharedViewModel by viewModels<BrokerSharedViewModel>()
+    private val chatViewModel by viewModels<ChatViewModel>()
     private val args by navArgs<ChatFragmentArgs>()
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
@@ -52,7 +54,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private lateinit var navController: NavController
     private lateinit var roomKey: String
     private lateinit var username: String
-    private val listData = mutableListOf<MessageModel>()
+    private val chatListData = mutableListOf<MessageModel>()
 
     private var currentLocation: LatLng? = null
     private lateinit var locationRequest: LocationRequest
@@ -130,6 +132,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         initialView()
         subscribeViews()
 
+        chatViewModel.getAllMessages(roomKey)
         brokerSharedViewModel.setMessageCallback()
 
         username = userPreference.getUsername() ?: ""
@@ -147,8 +150,9 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private fun initialView() {
         binding.chatTitleTextView.text = roomKey
 
+        binding.tvChatNoMessage.visibility = View.VISIBLE
         binding.messageList.layoutManager = LinearLayoutManager(requireContext())
-        binding.messageList.adapter = MessageAdapter(listData)
+        binding.messageList.adapter = MessageAdapter(chatListData)
 
         binding.chatBackImageView.setOnClickListener(this)
         binding.btnSend.setOnClickListener(this)
@@ -176,13 +180,14 @@ class ChatFragment : Fragment(), View.OnClickListener {
             val message = gsonPretty.fromJson(it, MessageModel::class.java)
 
             if (message.username != username) {
-                listData.add(
-                    listData.size,
+                chatListData.add(
+                    chatListData.size,
                     with(message) {
                         MessageModel(content, time, username, this@ChatFragment.roomKey, location)
-                    }
+                    }.also { messageModel -> chatViewModel.insertMessage(messageModel) }
                 )
-                binding.messageList.adapter?.notifyItemInserted(listData.size)
+                binding.tvChatNoMessage.visibility = View.GONE
+                binding.messageList.adapter?.notifyItemInserted(chatListData.size)
             }
         }
 
@@ -196,6 +201,19 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
         brokerSharedViewModel.unsubscribeError.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "unsubscribe failed", Toast.LENGTH_SHORT).show()
+        }
+
+        chatViewModel.getMessagesRespond.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                chatListData.clear()
+                chatListData.addAll(it)
+                binding.tvChatNoMessage.visibility = View.GONE
+                binding.messageList.adapter?.notifyItemInserted(0)
+            } else binding.tvChatNoMessage.visibility = View.VISIBLE
+        }
+
+        chatViewModel.getMessagesError.observe(viewLifecycleOwner) {
+            binding.tvChatNoMessage.visibility = View.VISIBLE
         }
     }
 
@@ -216,8 +234,10 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 val msg = binding.txtMessage.text.toString()
                 val messageModel =
                     MessageModel(msg, Date().time, username, roomKey, currentLocation)
-                listData.add(listData.size, messageModel)
-                binding.messageList.adapter?.notifyItemInserted(listData.size)
+                chatViewModel.insertMessage(messageModel)
+                chatListData.add(chatListData.size, messageModel)
+                binding.tvChatNoMessage.visibility = View.GONE
+                binding.messageList.adapter?.notifyItemInserted(chatListData.size)
 
                 val gsonPretty = GsonBuilder().setPrettyPrinting().create()
                 brokerSharedViewModel.publishMessage(
@@ -226,7 +246,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 )
 
                 binding.txtMessage.setText("")
-                binding.messageList.scrollToPosition(listData.size - 1)
+                binding.messageList.scrollToPosition(chatListData.size - 1)
             }
         }
     }

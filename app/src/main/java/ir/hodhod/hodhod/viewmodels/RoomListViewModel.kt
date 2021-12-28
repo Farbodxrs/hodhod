@@ -3,11 +3,15 @@ package ir.hodhod.hodhod.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hodhod.hodhod.data.models.RoomModel
 import ir.hodhod.hodhod.repositories.local.persistence.RoomRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+@HiltViewModel
+// TODO: we have to use usecases here later!
 class RoomListViewModel @Inject constructor(private val roomRepository: RoomRepository) :
     ViewModel() {
 

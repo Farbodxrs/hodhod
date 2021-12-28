@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "room")
 data class RoomEntity(
     @PrimaryKey
-    val roomKey: String
+    val roomKey: String,
+    val time: Long
 )

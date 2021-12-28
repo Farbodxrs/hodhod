@@ -14,8 +14,10 @@ import ir.hodhod.hodhod.data.models.RoomModel
 import ir.hodhod.hodhod.databinding.FragmentRoomListBinding
 import ir.hodhod.hodhod.utils.UsernameSharedPreferences
 import ir.hodhod.hodhod.viewmodels.BrokerSharedViewModel
+import ir.hodhod.hodhod.viewmodels.RoomListViewModel
 import ir.hodhod.hodhod.views.adapters.RoomAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.util.*
 import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
@@ -25,12 +27,15 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
 
     // region of params
     private val brokerSharedViewModel by viewModels<BrokerSharedViewModel>()
+    private val roomListViewModel by viewModels<RoomListViewModel>()
     private var _binding: FragmentRoomListBinding? = null
     private val binding get() = _binding!!
 
     private val userPreference by lazy {
         UsernameSharedPreferences.initialWith(requireContext().applicationContext)
     }
+
+    private val roomList = mutableListOf<RoomModel>()
 
     // END of region of params
 
@@ -46,17 +51,18 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (roomList == null) roomList = mutableListOf()
-
         initialView()
         subscribeViews()
 
         setUsername()
+
+        roomListViewModel.getAllRooms()
     }
 
     private fun initialView() {
+        binding.tvRoomListNoRoom.visibility = View.VISIBLE
         binding.roomListRV.layoutManager = LinearLayoutManager(requireContext())
-        binding.roomListRV.adapter = RoomAdapter(roomList ?: mutableListOf(), this)
+        binding.roomListRV.adapter = RoomAdapter(roomList, this)
 
         binding.btnAddRoom.setOnClickListener(this)
     }
@@ -68,6 +74,19 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
 
         brokerSharedViewModel.subscribeError.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "subscribe failed", Toast.LENGTH_SHORT).show()
+        }
+
+        roomListViewModel.getRoomsRespond.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                roomList.clear()
+                roomList.addAll(it)
+                binding.tvRoomListNoRoom.visibility = View.GONE
+                binding.roomListRV.adapter?.notifyItemInserted(0)
+            } else binding.tvRoomListNoRoom.visibility = View.VISIBLE
+        }
+
+        roomListViewModel.getRoomsError.observe(viewLifecycleOwner) {
+            binding.tvRoomListNoRoom.visibility = View.VISIBLE
         }
     }
 
@@ -85,7 +104,11 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
     override fun onJoinClickListener(key: String) {
         brokerSharedViewModel.subscribeToTopic(key)
 
-        roomList?.add(RoomModel(key))
+        val room = RoomModel(key, Date().time)
+        roomList.add(0, room)
+        roomListViewModel.insertRoom(room)
+        binding.tvRoomListNoRoom.visibility = View.GONE
+        binding.roomListRV.adapter?.notifyItemInserted(0)
 
         findNavController().navigate(
             RoomListFragmentDirections.actionRoomListFragmentToChatFragment(key)
@@ -110,11 +133,5 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
         findNavController().navigate(
             RoomListFragmentDirections.actionRoomListFragmentToChatFragment(key)
         )
-    }
-
-    companion object {
-
-        // TODO: we should get room list from database, it's a temporary solution!
-        private var roomList: MutableList<RoomModel>? = null
     }
 }

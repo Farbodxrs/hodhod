@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
-// TODO: we have to use IMQTTBrokerRepository here later!
+// TODO: we have to use usecases here later!
 class BrokerSharedViewModel @Inject constructor(private val mqttBrokerRepository: MQTTBrokerRepository) :
     ViewModel() {
 

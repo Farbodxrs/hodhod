@@ -4,11 +4,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.hodhod.hodhod.data.models.MessageModel
 import ir.hodhod.hodhod.repositories.local.persistence.MessageRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+@HiltViewModel
+// TODO: we have to use usecases here later!
 class ChatViewModel @Inject constructor(private val messageRepository: MessageRepository) :
     ViewModel() {
 
