@@ -16,7 +16,7 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(private val messageRepository: MessageRepository) :
     ViewModel() {
 
-    val getLocationsRespond = MutableLiveData<List<LatLng?>>()
+    val getLocationsRespond = MutableLiveData<Map<String, LatLng?>>()
     val getLocationsError = MutableLiveData<Unit>()
 
     val getMessagesRespond = MutableLiveData<List<MessageModel>>()

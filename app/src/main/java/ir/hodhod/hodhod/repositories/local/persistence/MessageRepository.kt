@@ -21,7 +21,7 @@ class MessageRepository @Inject constructor(private val messageDao: MessageDao) 
 
     override suspend fun getAllLocationsByRoomKey(roomKey: String) =
         messageDao.executeQuery({
-            getAllLocationMessagesByRoomKey(roomKey).map { it.location }
+            getAllLocationMessagesByRoomKey(roomKey).associate { it.sender to it.location }
         })
 
     override suspend fun getAllUsernamesByRoomKey(roomKey: String) =

@@ -157,6 +157,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
         binding.chatBackImageView.setOnClickListener(this)
         binding.btnSend.setOnClickListener(this)
+        binding.chatTitleTextView.setOnClickListener(this)
+        binding.chatMapImageView.setOnClickListener(this)
     }
 
     private fun subscribeViews() {
@@ -215,7 +217,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 chatListData.clear()
                 chatListData.addAll(it)
                 binding.tvChatNoMessage.visibility = View.GONE
-                binding.messageList.adapter?.notifyItemInserted(0)
+                binding.messageList.adapter?.notifyItemRangeChanged(0, chatListData.size)
+                binding.messageList.scrollToPosition(chatListData.size.minus(1))
             } else binding.tvChatNoMessage.visibility = View.VISIBLE
         }
 
@@ -254,6 +257,14 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 binding.txtMessage.setText("")
                 binding.messageList.scrollToPosition(chatListData.size.minus(1))
             }
+
+            binding.chatTitleTextView -> navController.navigate(
+                ChatFragmentDirections.actionChatFragmentToRoomSettingFragment(roomKey)
+            )
+
+            binding.chatMapImageView -> navController.navigate(
+                ChatFragmentDirections.actionChatFragmentToRoomMapFragment(roomKey)
+            )
         }
     }
 }

@@ -26,6 +26,38 @@
             android:name="roomKey"
             app:argType="string"
             app:nullable="false" />
+
+        <action
+            android:id="@+id/action_chatFragment_to_roomMapFragment"
+            app:destination="@id/roomMapFragment" />
+
+        <action
+            android:id="@+id/action_chatFragment_to_roomSettingFragment"
+            app:destination="@id/roomSettingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/roomSettingFragment"
+        android:name="ir.hodhod.hodhod.views.fragments.RoomSettingFragment"
+        android:label="RoomSettingFragment"
+        tools:layout="@layout/fragment_room_setting">
+
+        <argument
+            android:name="roomKey"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/roomMapFragment"
+        android:name="ir.hodhod.hodhod.views.fragments.RoomMapFragment"
+        android:label="RoomMapFragment"
+        tools:layout="@layout/fragment_room_map">
+
+        <argument
+            android:name="roomKey"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 
 </navigation>
