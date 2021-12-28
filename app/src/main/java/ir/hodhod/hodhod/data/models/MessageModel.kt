@@ -7,5 +7,5 @@ data class MessageModel(
     val time: Long,
     val username: String,
     val roomKey: String,
-    val location: LatLng
+    val location: LatLng?
 )

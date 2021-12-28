@@ -15,5 +15,5 @@ data class MessageEntity(
     val time: Long,
     val roomKey: String,
     @Embedded
-    val location: LatLng
+    val location: LatLng?
 )

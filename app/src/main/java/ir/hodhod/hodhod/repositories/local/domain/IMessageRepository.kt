@@ -7,6 +7,6 @@ interface IMessageRepository {
 
     suspend fun insertMessage(messageModel: MessageModel): Unit?
     suspend fun getAllMessagesByRoomKey(roomKey: String): List<MessageModel>?
-    suspend fun getAllLocationsByRoomKey(roomKey: String): List<LatLng>?
+    suspend fun getAllLocationsByRoomKey(roomKey: String): List<LatLng?>?
     suspend fun getAllUsernamesByRoomKey(roomKey: String): List<String>?
 }

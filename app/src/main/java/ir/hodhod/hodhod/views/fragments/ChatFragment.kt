@@ -1,16 +1,29 @@
 package ir.hodhod.hodhod.views.fragments
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.data.models.MessageModel
@@ -40,11 +53,64 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private lateinit var roomKey: String
     private lateinit var username: String
     private val listData = mutableListOf<MessageModel>()
+
+    private var currentLocation: LatLng? = null
+    private lateinit var locationRequest: LocationRequest
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            super.onLocationResult(locationResult)
+            currentLocation = locationResult.lastLocation.run { LatLng(latitude, longitude) }
+        }
+    }
+    private lateinit var locationManager: LocationManager
+
+    // permission launcher for location
+    @SuppressLint("MissingPermission")
+    private val permissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        // getting user location
+        if (it.entries.first().value)
+            LocationServices.getFusedLocationProviderClient(requireContext())
+                .requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+    }
+
     // END of region of params
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         roomKey = args.roomKey
+
+        locationManager =
+            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        locationRequest = LocationRequest.create().apply {
+            interval = 5000L
+            fastestInterval = 5000L
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        }
+
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        } else {
+            // getting user location
+            LocationServices.getFusedLocationProviderClient(requireContext())
+                .requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+        }
     }
 
     override fun onCreateView(
@@ -113,7 +179,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 listData.add(
                     listData.size,
                     with(message) {
-                        MessageModel(content, time, username)
+                        MessageModel(content, time, username, this@ChatFragment.roomKey, location)
                     }
                 )
                 binding.messageList.adapter?.notifyItemInserted(listData.size)
@@ -148,16 +214,15 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
             binding.btnSend -> {
                 val msg = binding.txtMessage.text.toString()
-                listData.add(
-                    listData.size,
-                    MessageModel(msg, Date().time, username, roomKey)
-                )
+                val messageModel =
+                    MessageModel(msg, Date().time, username, roomKey, currentLocation)
+                listData.add(listData.size, messageModel)
                 binding.messageList.adapter?.notifyItemInserted(listData.size)
 
                 val gsonPretty = GsonBuilder().setPrettyPrinting().create()
                 brokerSharedViewModel.publishMessage(
                     roomKey,
-                    gsonPretty.toJson(listData.last())
+                    gsonPretty.toJson(messageModel)
                 )
 
                 binding.txtMessage.setText("")
