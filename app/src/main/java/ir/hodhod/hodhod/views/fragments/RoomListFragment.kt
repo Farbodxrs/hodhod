@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.data.models.RoomModel
 import ir.hodhod.hodhod.databinding.FragmentRoomListBinding
 import ir.hodhod.hodhod.utils.UsernameSharedPreferences
-import ir.hodhod.hodhod.viewmodels.SharedViewModel
+import ir.hodhod.hodhod.viewmodels.BrokerSharedViewModel
 import ir.hodhod.hodhod.views.adapters.RoomAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.random.Random
@@ -24,15 +24,15 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
     RoomAdapter.ItemClickListener {
 
     // region of params
-    private val sharedViewModel by viewModels<SharedViewModel>()
+    private val brokerSharedViewModel by viewModels<BrokerSharedViewModel>()
     private var _binding: FragmentRoomListBinding? = null
     private val binding get() = _binding!!
 
     private val userPreference by lazy {
         UsernameSharedPreferences.initialWith(requireContext().applicationContext)
     }
-    // END of region of params
 
+    // END of region of params
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,11 +62,11 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
     }
 
     private fun subscribeViews() {
-        sharedViewModel.subscribeRespond.observe(viewLifecycleOwner) {
+        brokerSharedViewModel.subscribeRespond.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "subscribed successfully", Toast.LENGTH_SHORT).show()
         }
 
-        sharedViewModel.subscribeError.observe(viewLifecycleOwner) {
+        brokerSharedViewModel.subscribeError.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "subscribe failed", Toast.LENGTH_SHORT).show()
         }
     }
@@ -83,7 +83,7 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
     }
 
     override fun onJoinClickListener(key: String) {
-        sharedViewModel.subscribeToTopic(key)
+        brokerSharedViewModel.subscribeToTopic(key)
 
         roomList?.add(RoomModel(key))
 
@@ -105,7 +105,7 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
     }
 
     override fun onItemClickListener(key: String) {
-        sharedViewModel.subscribeToTopic(key)
+        brokerSharedViewModel.subscribeToTopic(key)
 
         findNavController().navigate(
             RoomListFragmentDirections.actionRoomListFragmentToChatFragment(key)

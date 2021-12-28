@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.R
-import ir.hodhod.hodhod.viewmodels.SharedViewModel
+import ir.hodhod.hodhod.viewmodels.BrokerSharedViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
@@ -16,7 +16,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class MainActivity : AppCompatActivity() {
 
     // region of params
-    private val sharedViewModel by viewModels<SharedViewModel>()
+    private val brokerSharedViewModel by viewModels<BrokerSharedViewModel>()
 
     // END of region of params
 
@@ -28,29 +28,29 @@ class MainActivity : AppCompatActivity() {
 
         subscribeViews()
 
-        sharedViewModel.connectToServer()
+        brokerSharedViewModel.connectToServer()
     }
 
     private fun subscribeViews() {
-        sharedViewModel.connectRespond.observe(this) {
+        brokerSharedViewModel.connectRespond.observe(this) {
             Toast.makeText(this, "connected successfully", Toast.LENGTH_SHORT).show()
         }
 
-        sharedViewModel.connectError.observe(this) {
+        brokerSharedViewModel.connectError.observe(this) {
             Toast.makeText(this, "connect failed", Toast.LENGTH_SHORT).show()
         }
 
-        sharedViewModel.disconnectRespond.observe(this) {
+        brokerSharedViewModel.disconnectRespond.observe(this) {
             Toast.makeText(this, "disconnected successfully", Toast.LENGTH_SHORT).show()
         }
 
-        sharedViewModel.disconnectError.observe(this) {
+        brokerSharedViewModel.disconnectError.observe(this) {
             Toast.makeText(this, "disconnect failed", Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onDestroy() {
-        sharedViewModel.disconnectFromServer()
+        brokerSharedViewModel.disconnectFromServer()
         super.onDestroy()
     }
 }

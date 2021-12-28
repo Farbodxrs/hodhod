@@ -13,7 +13,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @HiltViewModel
 // TODO: we have to use IMQTTBrokerRepository here later!
-class SharedViewModel @Inject constructor(private val mqttBrokerRepository: MQTTBrokerRepository) :
+class BrokerSharedViewModel @Inject constructor(private val mqttBrokerRepository: MQTTBrokerRepository) :
     ViewModel() {
 
     val connectRespond = MutableLiveData<Unit>()

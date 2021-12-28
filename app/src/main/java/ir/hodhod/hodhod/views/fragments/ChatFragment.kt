@@ -16,9 +16,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.data.models.MessageModel
 import ir.hodhod.hodhod.databinding.FragmentChatBinding
 import ir.hodhod.hodhod.utils.UsernameSharedPreferences
-import ir.hodhod.hodhod.viewmodels.SharedViewModel
+import ir.hodhod.hodhod.viewmodels.BrokerSharedViewModel
 import ir.hodhod.hodhod.views.adapters.MessageAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.util.*
 
 
 @ExperimentalCoroutinesApi
@@ -26,7 +27,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class ChatFragment : Fragment(), View.OnClickListener {
 
     // region of params
-    private val sharedViewModel by viewModels<SharedViewModel>()
+    private val brokerSharedViewModel by viewModels<BrokerSharedViewModel>()
     private val args by navArgs<ChatFragmentArgs>()
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
@@ -63,7 +64,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         initialView()
         subscribeViews()
 
-        sharedViewModel.setMessageCallback()
+        brokerSharedViewModel.setMessageCallback()
 
         username = userPreference.getUsername() ?: ""
 
@@ -88,20 +89,20 @@ class ChatFragment : Fragment(), View.OnClickListener {
     }
 
     private fun subscribeViews() {
-        sharedViewModel.publishRespond.observe(viewLifecycleOwner) {
+        brokerSharedViewModel.publishRespond.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "published successfully", Toast.LENGTH_SHORT).show()
         }
 
-        sharedViewModel.publishError.observe(viewLifecycleOwner) {
+        brokerSharedViewModel.publishError.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "publish failed", Toast.LENGTH_SHORT).show()
         }
 
-        sharedViewModel.messageDeliver.observe(viewLifecycleOwner) {
+        brokerSharedViewModel.messageDeliver.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "message delivered successfully", Toast.LENGTH_SHORT)
                 .show()
         }
 
-        sharedViewModel.messageArrived.observe(viewLifecycleOwner) {
+        brokerSharedViewModel.messageArrived.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "message arrived successfully", Toast.LENGTH_SHORT)
                 .show()
 
@@ -112,22 +113,22 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 listData.add(
                     listData.size,
                     with(message) {
-                        MessageModel(content, false, time, username)
+                        MessageModel(content, time, username)
                     }
                 )
                 binding.messageList.adapter?.notifyItemInserted(listData.size)
             }
         }
 
-        sharedViewModel.connectionLost.observe(viewLifecycleOwner) {
+        brokerSharedViewModel.connectionLost.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "connection lost", Toast.LENGTH_SHORT).show()
         }
 
-        sharedViewModel.unsubscribeRespond.observe(viewLifecycleOwner) {
+        brokerSharedViewModel.unsubscribeRespond.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "unsubscribed successfully", Toast.LENGTH_SHORT).show()
         }
 
-        sharedViewModel.unsubscribeError.observe(viewLifecycleOwner) {
+        brokerSharedViewModel.unsubscribeError.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "unsubscribe failed", Toast.LENGTH_SHORT).show()
         }
     }
@@ -140,7 +141,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             binding.chatBackImageView -> {
-                sharedViewModel.unsubscribeFromTopic(roomKey)
+                brokerSharedViewModel.unsubscribeFromTopic(roomKey)
 
                 navController.navigateUp()
             }
@@ -149,12 +150,12 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 val msg = binding.txtMessage.text.toString()
                 listData.add(
                     listData.size,
-                    MessageModel(msg, true, System.currentTimeMillis(), username)
+                    MessageModel(msg, Date().time, username, roomKey)
                 )
                 binding.messageList.adapter?.notifyItemInserted(listData.size)
 
                 val gsonPretty = GsonBuilder().setPrettyPrinting().create()
-                sharedViewModel.publishMessage(
+                brokerSharedViewModel.publishMessage(
                     roomKey,
                     gsonPretty.toJson(listData.last())
                 )

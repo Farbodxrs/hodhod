@@ -18,4 +18,7 @@ interface MessageDao : GeneralDao {
 
     @Query("SELECT * FROM message WHERE roomKey = :roomKey GROUP BY sender ORDER BY time DESC LIMIT 1")
     suspend fun getAllLocationMessagesByRoomKey(roomKey: String): List<MessageEntity>
+
+    @Query("SELECT DISTINCT sender FROM message WHERE roomKey = :roomKey")
+    suspend fun getAllUsernamesByRoomKey(roomKey: String): List<String>
 }
