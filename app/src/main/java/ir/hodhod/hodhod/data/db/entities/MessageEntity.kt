@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng
 @Entity(tableName = "message")
 data class MessageEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int? = null,
     val sender: String,
     val content: String,
     val time: Long,

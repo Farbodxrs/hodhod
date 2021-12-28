@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ir.hodhod.hodhod.R
 import ir.hodhod.hodhod.data.models.MessageModel
 import ir.hodhod.hodhod.utils.DateUtil
+import ir.hodhod.hodhod.utils.UsernameSharedPreferences
 
 
 class MessageAdapter(
@@ -35,8 +36,11 @@ class MessageAdapter(
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val item = dataset[position]
+        val userPreference by lazy {
+            UsernameSharedPreferences.initialWith(holder.itemView.context)
+        }
 
-        if (item.fromMe) {
+        if (item.username == userPreference.getUsername()) {
             holder.apply {
                 textView.text = item.content
 //                  date.text = DateUtil.formatDate(item.createdAt)
