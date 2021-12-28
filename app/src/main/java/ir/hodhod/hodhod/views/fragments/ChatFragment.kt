@@ -54,6 +54,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private lateinit var navController: NavController
     private lateinit var roomKey: String
     private lateinit var username: String
+    private val gsonPretty = GsonBuilder().setPrettyPrinting().create()
     private val chatListData = mutableListOf<MessageModel>()
 
     private var currentLocation: LatLng? = null
@@ -176,18 +177,24 @@ class ChatFragment : Fragment(), View.OnClickListener {
             Toast.makeText(requireContext(), "message arrived successfully", Toast.LENGTH_SHORT)
                 .show()
 
-            val gsonPretty = GsonBuilder().setPrettyPrinting().create()
             val message = gsonPretty.fromJson(it, MessageModel::class.java)
 
             if (message.username != username) {
                 chatListData.add(
                     chatListData.size,
                     with(message) {
-                        MessageModel(content, time, username, this@ChatFragment.roomKey, location)
+                        MessageModel(
+                            content,
+                            Date().time, // because we want to display local time
+                            username,
+                            roomKey,
+                            location
+                        )
                     }.also { messageModel -> chatViewModel.insertMessage(messageModel) }
                 )
                 binding.tvChatNoMessage.visibility = View.GONE
                 binding.messageList.adapter?.notifyItemInserted(chatListData.size)
+                binding.messageList.scrollToPosition(chatListData.size.minus(1))
             }
         }
 
@@ -239,14 +246,13 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 binding.tvChatNoMessage.visibility = View.GONE
                 binding.messageList.adapter?.notifyItemInserted(chatListData.size)
 
-                val gsonPretty = GsonBuilder().setPrettyPrinting().create()
                 brokerSharedViewModel.publishMessage(
                     roomKey,
                     gsonPretty.toJson(messageModel)
                 )
 
                 binding.txtMessage.setText("")
-                binding.messageList.scrollToPosition(chatListData.size - 1)
+                binding.messageList.scrollToPosition(chatListData.size.minus(1))
             }
         }
     }

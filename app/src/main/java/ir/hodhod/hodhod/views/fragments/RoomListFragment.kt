@@ -81,7 +81,7 @@ class RoomListFragment : Fragment(), JoinRoomPopupFragment.JoinClickListener, Vi
                 roomList.clear()
                 roomList.addAll(it)
                 binding.tvRoomListNoRoom.visibility = View.GONE
-                binding.roomListRV.adapter?.notifyItemInserted(0)
+                binding.roomListRV.adapter?.notifyItemRangeChanged(0, roomList.size)
             } else binding.tvRoomListNoRoom.visibility = View.VISIBLE
         }
 
