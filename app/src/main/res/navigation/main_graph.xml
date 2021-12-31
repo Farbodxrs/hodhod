@@ -58,6 +58,14 @@
             android:name="roomKey"
             app:argType="string"
             app:nullable="false" />
+        <argument
+            android:name="latitude"
+            app:argType="float"
+            app:nullable="false" />
+        <argument
+            android:name="longitude"
+            app:argType="float"
+            app:nullable="false" />
     </fragment>
 
 </navigation>
