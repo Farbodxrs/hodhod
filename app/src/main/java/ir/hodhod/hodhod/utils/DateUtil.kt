@@ -11,7 +11,8 @@ object DateUtil {
 
 
     fun formatDate(timeInMillis: Long): String {
-        val dateFormat = SimpleDateFormat("MMMM dd", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+//        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         return dateFormat.format(timeInMillis)
     }
 }

@@ -70,4 +70,30 @@
         android:textSize="11sp"
         tools:text="10:00" />
 
+    <TextView
+        android:id="@+id/date_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/my_message"
+        android:layout_alignStart="@id/my_message"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="-4dp"
+        android:textColor="#333333"
+        android:textSize="11sp"
+        tools:text="19 March 2021" />
+
+    <TextView
+        android:id="@+id/date_other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/other_message"
+        android:layout_alignEnd="@id/other_message"
+        android:layout_marginTop="-4dp"
+        android:layout_marginEnd="45dp"
+        android:textColor="#333333"
+        android:textSize="11sp"
+        tools:text="19 March 2021" />
+
+
+
 </RelativeLayout>
