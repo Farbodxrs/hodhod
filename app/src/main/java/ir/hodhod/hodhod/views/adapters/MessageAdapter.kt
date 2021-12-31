@@ -18,8 +18,8 @@ class MessageAdapter(
     class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.my_message)
         val otherTextView: TextView = itemView.findViewById(R.id.other_message)
-
-        //        val date: TextView = view.findViewById((R.id.date))
+        val meDate: TextView = view.findViewById((R.id.date_me))
+        val otherDate: TextView = view.findViewById((R.id.date_other))
         val username: TextView = view.findViewById((R.id.username_other))
         val otherTimestamps: TextView = view.findViewById((R.id.timestamp_other))
         val meTimestamps: TextView = view.findViewById((R.id.timestamp_me))
@@ -43,21 +43,23 @@ class MessageAdapter(
         if (item.username == userPreference.getUsername()) {
             holder.apply {
                 textView.text = item.content
-//                  date.text = DateUtil.formatDate(item.createdAt)
+                meDate.text = DateUtil.formatDate(item.time)
                 meTimestamps.text = DateUtil.formatTime(item.time)
                 otherTextView.visibility = View.GONE
                 username.visibility = View.GONE
                 otherTimestamps.visibility = View.GONE
+                otherDate.visibility = View.GONE
             }
 
         } else {
             holder.apply {
                 otherTextView.text = item.content
                 otherTimestamps.text = DateUtil.formatTime(item.time)
-//                  date.text = DateUtil.formatDate(item.createdAt)
+                otherDate.text = DateUtil.formatDate(item.time)
                 username.text = item.username
                 meTimestamps.visibility = View.GONE
                 textView.visibility = View.GONE
+                meDate.visibility = View.GONE
             }
         }
     }
