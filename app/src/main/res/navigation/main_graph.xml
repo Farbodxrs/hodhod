@@ -46,6 +46,9 @@
             android:name="roomKey"
             app:argType="string"
             app:nullable="false" />
+        <action
+            android:id="@+id/action_roomSettingFragment_to_roomListFragment"
+            app:destination="@id/roomListFragment" />
     </fragment>
 
     <fragment
