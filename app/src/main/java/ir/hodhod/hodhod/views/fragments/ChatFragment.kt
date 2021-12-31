@@ -261,9 +261,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 ChatFragmentDirections.actionChatFragmentToRoomSettingFragment(roomKey)
             )
 
-            binding.chatMapImageView -> navController.navigate(
-                ChatFragmentDirections.actionChatFragmentToRoomMapFragment(roomKey)
-            )
+            binding.chatMapImageView ->
+                currentLocation?.let { navController.navigate (ChatFragmentDirections.actionChatFragmentToRoomMapFragment(roomKey, it.latitude.toFloat(), it.longitude.toFloat())) }
         }
     }
 }

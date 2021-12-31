@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -13,10 +15,14 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import ir.hodhod.hodhod.R
 import ir.hodhod.hodhod.databinding.FragmentRoomMapBinding
+import ir.hodhod.hodhod.utils.UsernameSharedPreferences
 import ir.hodhod.hodhod.viewmodels.ChatViewModel
 
 
@@ -32,6 +38,10 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
 
     private lateinit var roomKey: String
+
+    private val userPreference by lazy {
+        UsernameSharedPreferences.initialWith(requireContext().applicationContext)
+    }
 
     // END of region of params
 
@@ -59,7 +69,6 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback {
         initialView()
         subscribeViews()
 
-        chatViewModel.getLocations(roomKey)
     }
 
     private fun initialView() {
@@ -68,6 +77,29 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback {
     private fun subscribeViews() {
         chatViewModel.getLocationsRespond.observe(viewLifecycleOwner) {
             Log.e("Sepehr", "locations: $it")
+            Log.e("latitude: $args.latitude.toDouble()", "longtitude : $args.longitude.toDouble()")
+
+            it.keys.forEach { username ->
+                if (username != userPreference.getUsername()) {
+                    map.addMarker(
+                        MarkerOptions().apply {
+                            it[username]?.also { latLng ->
+                                position(latLng)
+                                icon(
+                                    BitmapDescriptorFactory.fromBitmap(
+                                        ResourcesCompat.getDrawable(
+                                            resources,
+                                            R.drawable.ic_vending_pin,
+                                            requireContext().theme
+                                        )!!
+                                            .toBitmap()
+                                    )
+                                )
+                                title(username)
+                            }
+                        })
+                }
+            }
         }
 
         chatViewModel.getLocationsError.observe(viewLifecycleOwner) {
@@ -78,16 +110,16 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-
+        chatViewModel.getLocations(roomKey)
         map.apply {
             mapType = GoogleMap.MAP_TYPE_NORMAL
             isMyLocationEnabled = true
 
-            // move camera to last location
+//          move camera to last location
             moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                    LatLng(35.0, 51.0),
-                    7f
+                    LatLng(args.latitude.toDouble(), args.longitude.toDouble()),
+                    9f
                 )
             )
 
@@ -97,4 +129,5 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback {
             }
         }
     }
+
 }
