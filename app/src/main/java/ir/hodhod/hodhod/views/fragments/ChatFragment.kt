@@ -155,7 +155,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
                     }.also { messageModel -> chatViewModel.insertMessage(messageModel) }
                 )
                 binding.tvChatNoMessage.visibility = View.GONE
-                binding.messageList.adapter?.notifyItemInserted(chatListData.size)
+                binding.messageList.adapter?.notifyItemRangeChanged(0, chatListData.size)
                 binding.messageList.scrollToPosition(chatListData.size.minus(1))
             }
         }
@@ -226,9 +226,9 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 val messageModel =
                     MessageModel(msg, Date().time, username, roomKey, currentLocation)
                 chatViewModel.insertMessage(messageModel)
-                chatListData.add(chatListData.size, messageModel)
+                chatListData.add(messageModel)
                 binding.tvChatNoMessage.visibility = View.GONE
-                binding.messageList.adapter?.notifyItemInserted(chatListData.size)
+                binding.messageList.adapter?.notifyItemRangeChanged(0, chatListData.size)
 
                 brokerSharedViewModel.publishMessage(
                     roomKey,
