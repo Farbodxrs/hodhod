@@ -2,20 +2,20 @@ package ir.hodhod.hodhod.views.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -27,7 +27,7 @@ import ir.hodhod.hodhod.viewmodels.ChatViewModel
 
 
 @AndroidEntryPoint
-class RoomMapFragment : Fragment(), OnMapReadyCallback {
+class RoomMapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
     // region of params
     private val chatViewModel by viewModels<ChatViewModel>()
@@ -68,17 +68,14 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback {
 
         initialView()
         subscribeViews()
-
     }
 
     private fun initialView() {
+        binding.mapBackImageView.setOnClickListener(this)
     }
 
     private fun subscribeViews() {
         chatViewModel.getLocationsRespond.observe(viewLifecycleOwner) {
-            Log.e("Sepehr", "locations: $it")
-            Log.e("latitude: $args.latitude.toDouble()", "longtitude : $args.longitude.toDouble()")
-
             it.keys.forEach { username ->
                 if (username != userPreference.getUsername()) {
                     map.addMarker(
@@ -91,8 +88,7 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback {
                                             resources,
                                             R.drawable.ic_vending_pin,
                                             requireContext().theme
-                                        )!!
-                                            .toBitmap()
+                                        )!!.toBitmap()
                                     )
                                 )
                                 title(username)
@@ -103,7 +99,7 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback {
         }
 
         chatViewModel.getLocationsError.observe(viewLifecycleOwner) {
-
+            Toast.makeText(requireContext(), R.string.problem_occurred, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -115,7 +111,7 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback {
             mapType = GoogleMap.MAP_TYPE_NORMAL
             isMyLocationEnabled = true
 
-//          move camera to last location
+            // move camera to current location
             moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
                     LatLng(args.latitude.toDouble(), args.longitude.toDouble()),
@@ -130,4 +126,9 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    override fun onClick(v: View?) {
+        when (v) {
+            binding.mapBackImageView -> findNavController().navigateUp()
+        }
+    }
 }

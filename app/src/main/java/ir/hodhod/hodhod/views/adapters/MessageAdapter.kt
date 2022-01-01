@@ -50,7 +50,6 @@ class MessageAdapter(
                 otherTimestamps.visibility = View.GONE
                 otherDate.visibility = View.GONE
             }
-
         } else {
             holder.apply {
                 otherTextView.text = item.content

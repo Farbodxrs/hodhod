@@ -9,10 +9,9 @@ object DateUtil {
         return dateFormat.format(timeInMillis)
     }
 
-
     fun formatDate(timeInMillis: Long): String {
-        val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
-//        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+//        val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
         return dateFormat.format(timeInMillis)
     }
 }
