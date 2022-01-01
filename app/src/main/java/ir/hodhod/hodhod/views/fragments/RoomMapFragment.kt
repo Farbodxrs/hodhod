@@ -126,6 +126,11 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
         }
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     override fun onClick(v: View?) {
         when (v) {
             binding.mapBackImageView -> findNavController().navigateUp()

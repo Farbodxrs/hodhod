@@ -93,6 +93,11 @@ class RoomSettingFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     override fun onClick(v: View?) {
         when (v) {
             binding.btnLeave -> roomListViewModel.deleteRoom(RoomModel(roomKey))

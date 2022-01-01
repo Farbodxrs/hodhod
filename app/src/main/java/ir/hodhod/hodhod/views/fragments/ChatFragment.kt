@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -67,17 +66,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
     }
     private lateinit var locationManager: LocationManager
 
-    // permission launcher for location
-    @SuppressLint("MissingPermission")
-    private val permissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) {
-        // getting user location
-        if (it.entries.first().value)
-            LocationServices.getFusedLocationProviderClient(requireContext())
-                .requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
-    }
-
     // END of region of params
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,27 +80,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
             interval = 5000L
             fastestInterval = 5000L
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        }
-
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
-        } else {
-            // getting user location
-            LocationServices.getFusedLocationProviderClient(requireContext())
-                .requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
         }
     }
 
@@ -138,14 +105,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
         username = userPreference.getUsername() ?: ""
 
-//        listData.addAll(
-//            listOf(
-//                MessageModel("این پیام برای تست است.", false, 1366713508000, "sama"),
-//                MessageModel("باشه.", false, 1366813508000, "sepehr"),
-//                MessageModel("سلام به همگی", true, 1366913508000, "sama"),
-//                MessageModel("سلام", false, 1367713508000, "sepehr")
-//            )
-//        )
+        if (!isLocationGranted())
+            navController.navigate(ChatFragmentDirections.actionChatFragmentToLocationBottomSheetFragment())
     }
 
     private fun initialView() {
@@ -226,6 +187,27 @@ class ChatFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    private fun isLocationGranted() =
+        ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+
+    @SuppressLint("MissingPermission")
+    override fun onResume() {
+        super.onResume()
+
+        if (isLocationGranted()) {
+            // getting user location
+            LocationServices.getFusedLocationProviderClient(requireContext())
+                .requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+        }
+    }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
@@ -262,15 +244,19 @@ class ChatFragment : Fragment(), View.OnClickListener {
             )
 
             binding.chatMapImageView ->
-                currentLocation?.let {
-                    navController.navigate(
-                        ChatFragmentDirections.actionChatFragmentToRoomMapFragment(
-                            roomKey,
-                            it.latitude.toFloat(),
-                            it.longitude.toFloat()
+                if (isLocationGranted())
+                    currentLocation?.let {
+                        navController.navigate(
+                            ChatFragmentDirections.actionChatFragmentToRoomMapFragment(
+                                roomKey,
+                                it.latitude.toFloat(),
+                                it.longitude.toFloat()
+                            )
                         )
-                    )
-                }
+                    }
+                else navController.navigate(
+                    ChatFragmentDirections.actionChatFragmentToLocationBottomSheetFragment()
+                )
         }
     }
 }

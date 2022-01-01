@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FEF3FF"
-    >
+    android:layout_height="wrap_content"
+    android:background="#FEF3FF">
 
     <TextView
         android:id="@+id/joinTitleTextView"
@@ -54,10 +52,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/joinGuideline"
-        app:layout_constraintTop_toBottomOf="@id/joinEditText"
-
-
-        />
+        app:layout_constraintTop_toBottomOf="@id/joinEditText" />
 
     <Button
         android:id="@+id/joinButtonCancel"
@@ -73,13 +68,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/joinEditText" />
 
-    <ImageView
-        android:id="@+id/imageViewLogo"
-
-        android:layout_width="match_parent"
-        android:layout_height="1000dp"
-        android:src="@drawable/logo"
-        android:alpha=".25"
-        tools:ignore="MissingConstraints" />
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageViewLogo"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="1000dp"-->
+    <!--        android:src="@drawable/logo"-->
+    <!--        android:alpha=".25"-->
+    <!--        tools:ignore="MissingConstraints" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

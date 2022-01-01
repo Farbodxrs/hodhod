@@ -34,6 +34,10 @@
         <action
             android:id="@+id/action_chatFragment_to_roomSettingFragment"
             app:destination="@id/roomSettingFragment" />
+
+        <action
+            android:id="@+id/action_chatFragment_to_locationBottomSheetFragment"
+            app:destination="@id/locationBottomSheetFragment" />
     </fragment>
 
     <fragment
@@ -73,5 +77,11 @@
             app:argType="float"
             app:nullable="false" />
     </fragment>
+
+    <dialog
+        android:id="@+id/locationBottomSheetFragment"
+        android:name="ir.hodhod.hodhod.views.fragments.LocationBottomSheetFragment"
+        android:label="LocationBottomSheetFragment"
+        tools:layout="@layout/fragment_location_bottom_sheet" />
 
 </navigation>
