@@ -68,6 +68,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     // END of region of params
 
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -80,6 +81,12 @@ class ChatFragment : Fragment(), View.OnClickListener {
             interval = 5000L
             fastestInterval = 5000L
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        }
+
+        if (isLocationGranted()) {
+            // getting user location
+            LocationServices.getFusedLocationProviderClient(requireContext())
+                .requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
         }
     }
 
