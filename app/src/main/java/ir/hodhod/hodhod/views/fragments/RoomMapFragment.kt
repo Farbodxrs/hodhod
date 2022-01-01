@@ -77,10 +77,10 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
     private fun subscribeViews() {
         chatViewModel.getLocationsRespond.observe(viewLifecycleOwner) {
             it.keys.forEach { username ->
-                if (username != userPreference.getUsername()) {
-                    map.addMarker(
-                        MarkerOptions().apply {
-                            it[username]?.also { latLng ->
+                it[username]?.also { latLng ->
+                    if (username != userPreference.getUsername()) {
+                        map.addMarker(
+                            MarkerOptions().apply {
                                 position(latLng)
                                 icon(
                                     BitmapDescriptorFactory.fromBitmap(
@@ -92,8 +92,8 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                                     )
                                 )
                                 title(username)
-                            }
-                        })
+                            })
+                    }
                 }
             }
         }
