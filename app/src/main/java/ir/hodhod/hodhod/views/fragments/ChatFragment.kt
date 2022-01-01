@@ -124,7 +124,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     private fun subscribeViews() {
         brokerSharedViewModel.publishRespond.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "published successfully", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireContext(), "published successfully", Toast.LENGTH_SHORT).show()
         }
 
         brokerSharedViewModel.publishError.observe(viewLifecycleOwner) {
@@ -132,13 +132,13 @@ class ChatFragment : Fragment(), View.OnClickListener {
         }
 
         brokerSharedViewModel.messageDeliver.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "message delivered successfully", Toast.LENGTH_SHORT)
-                .show()
+//            Toast.makeText(requireContext(), "message delivered successfully", Toast.LENGTH_SHORT)
+//                .show()
         }
 
         brokerSharedViewModel.messageArrived.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "message arrived successfully", Toast.LENGTH_SHORT)
-                .show()
+//            Toast.makeText(requireContext(), "message arrived successfully", Toast.LENGTH_SHORT)
+//                .show()
 
             val message = gsonPretty.fromJson(it, MessageModel::class.java)
 
@@ -165,11 +165,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
         }
 
         brokerSharedViewModel.unsubscribeRespond.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "unsubscribed successfully", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireContext(), "unsubscribed successfully", Toast.LENGTH_SHORT).show()
         }
 
         brokerSharedViewModel.unsubscribeError.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "unsubscribe failed", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireContext(), "unsubscribe failed", Toast.LENGTH_SHORT).show()
         }
 
         chatViewModel.getMessagesRespond.observe(viewLifecycleOwner) {

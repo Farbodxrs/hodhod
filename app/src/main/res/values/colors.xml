@@ -8,4 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#91919C</color>
+    <color name="primary_purple">#A163F5</color>
+    <color name="primary_blue_light">#8FFFF4</color>
+    <color name="primary_pink">#FF8EA0</color>
+    <color name="primary_yellow">#FFE822</color>
+    <color name="primary_green">#4CAF50</color>
+    <color name="primary_red">#B00020</color>
 </resources>

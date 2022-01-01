@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FEFAFF">
+    android:background="@color/primary_blue_light">
 
     <androidx.constraintlayout.widget.Group
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#FF8EA0"
+        android:background="@color/primary_purple"
         app:layout_constraintBottom_toTopOf="@id/chatTopLineView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,7 +24,7 @@
         app:layout_constraintBottom_toBottomOf="@id/chatTopLineView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#008ADD"
+        app:tint="@color/primary_yellow"
         tools:ignore="ContentDescription" />
 
     <TextView
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textColor="#006F65"
+        android:textColor="@color/primary_yellow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -48,26 +48,26 @@
 
     <Button
         android:id="@+id/btnLeave"
+        style="@style/TextAppearance.AppCompat.NormalWhite"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="65dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="#D70040"
+        android:backgroundTint="@color/primary_red"
         android:gravity="center"
-        android:text="Leave"
+        android:text="@string/leave"
         android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvUser"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/paper_fly1"
-        android:scrollbars="vertical"
+        android:padding="12dp"
         app:layout_constraintBottom_toTopOf="@id/btnLeave"
-        app:layout_constraintTop_toTopOf="@id/chatTopLineView" />
+        app:layout_constraintTop_toTopOf="@id/chatTopLineView"
+        tools:listitem="@layout/item_room" />
 
     <TextView
         android:id="@+id/tvRoomSettingNoUser"

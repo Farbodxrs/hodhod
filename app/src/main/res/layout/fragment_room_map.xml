@@ -18,13 +18,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/round_button"
-        android:backgroundTint="#FF7237"
+        android:backgroundTint="@color/primary_purple"
         android:padding="14dp"
         android:rotation="180"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#008ADD"
+        app:tint="@color/primary_yellow"
         tools:ignore="ContentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

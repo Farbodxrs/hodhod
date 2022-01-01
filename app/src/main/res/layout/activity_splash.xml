@@ -8,46 +8,46 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="36dp"
         android:layout_marginBottom="700dp"
         android:gravity="center"
         android:text="@string/be_secure_be_connected"
-        android:textColor="#375672"
+        android:textColor="@color/primary_purple"
         android:textSize="30sp"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        style="none"
+        style="@style/TextAppearance.AppCompat.NormalGray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="by krj team"
-        android:textColor="#D5CABD"
-        android:textSize="14sp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/by_krj_team"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:src="@drawable/logo"
-        tools:ignore="ContentDescription"
-        tools:layout_editor_absoluteX="80dp"
-        tools:layout_editor_absoluteY="150dp" />
-
-    <ImageView
-        android:id="@+id/imageViewMessage"
-        android:layout_width="55dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="340dp"
-        android:layout_marginTop="328dp"
-        android:layout_marginEnd="32dp"
-        android:src="@drawable/meesage"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageViewMessage"-->
+    <!--        android:layout_width="55dp"-->
+    <!--        android:layout_height="51dp"-->
+    <!--        android:layout_marginStart="340dp"-->
+    <!--        android:layout_marginTop="328dp"-->
+    <!--        android:layout_marginEnd="32dp"-->
+    <!--        android:src="@drawable/meesage"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        tools:ignore="ContentDescription" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

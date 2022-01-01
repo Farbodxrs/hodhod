@@ -33,19 +33,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun subscribeViews() {
         brokerSharedViewModel.connectRespond.observe(this) {
-            Toast.makeText(this, "connected successfully", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "connected successfully", Toast.LENGTH_SHORT).show()
         }
 
         brokerSharedViewModel.connectError.observe(this) {
-            Toast.makeText(this, "connect failed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.problem_occurred, Toast.LENGTH_SHORT).show()
         }
 
         brokerSharedViewModel.disconnectRespond.observe(this) {
-            Toast.makeText(this, "disconnected successfully", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "disconnected successfully", Toast.LENGTH_SHORT).show()
         }
 
         brokerSharedViewModel.disconnectError.observe(this) {
-            Toast.makeText(this, "disconnect failed", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "disconnect failed", Toast.LENGTH_SHORT).show()
         }
     }
 
