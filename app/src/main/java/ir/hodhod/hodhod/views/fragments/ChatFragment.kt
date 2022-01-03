@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -168,7 +167,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
                         )
                     }.also { messageModel -> chatViewModel.insertMessage(messageModel) }
                 )
-                Log.e("Sepehr", "hi1 ${newList.size} | ${newList.last()}")
                 binding.tvChatNoMessage.visibility = View.GONE
                 messageAdapter.updateData(newList)
                 binding.messageList.scrollToPosition(newList.size.minus(1))
@@ -246,7 +244,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 val newList = mutableListOf<MessageModel>()
                 newList.addAll(chatListData)
                 newList.add(messageModel)
-                Log.e("Sepehr", "hi2 ${newList.size} | ${newList.last()}")
                 binding.tvChatNoMessage.visibility = View.GONE
                 messageAdapter.updateData(newList)
 

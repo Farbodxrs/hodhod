@@ -1,6 +1,5 @@
 package ir.hodhod.hodhod.views.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,8 +71,8 @@ class MessageAdapter(
     fun updateData(list: List<MessageModel>) {
 
         val diffCallback = GeneralDiffCallback(dataset, list)
-        Log.e("Sepehr", "hi3 ${dataset.size} | ${dataset.last()}")
-        Log.e("Sepehr", "hi4 ${list.size} | ${list.last()}")
+//        Log.e("Sepehr", "hi3 ${dataset.size} | ${dataset.last()}")
+//        Log.e("Sepehr", "hi4 ${list.size} | ${list.last()}")
 
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 
