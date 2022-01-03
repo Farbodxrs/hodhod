@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +55,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private lateinit var roomKey: String
     private lateinit var username: String
     private val gsonPretty = GsonBuilder().setPrettyPrinting().create()
-    private val chatListData = mutableListOf<MessageModel>()
+    private var chatListData = mutableListOf<MessageModel>()
+    private lateinit var messageAdapter: MessageAdapter
 
     private var currentLocation: LatLng? = null
     private lateinit var locationRequest: LocationRequest
@@ -121,7 +123,10 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
         binding.tvChatNoMessage.visibility = View.VISIBLE
         binding.messageList.layoutManager = LinearLayoutManager(requireContext())
-        binding.messageList.adapter = MessageAdapter(chatListData)
+        messageAdapter = MessageAdapter(chatListData).apply {
+            setHasStableIds(true)
+        }
+        binding.messageList.adapter = messageAdapter
 
         binding.chatBackImageView.setOnClickListener(this)
         binding.btnSend.setOnClickListener(this)
@@ -148,9 +153,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
 //                .show()
 
             val message = gsonPretty.fromJson(it, MessageModel::class.java)
+            val newList = mutableListOf<MessageModel>()
+            newList.addAll(chatListData)
 
             if (message.username != username) {
-                chatListData.add(
+                newList.add(
                     with(message) {
                         MessageModel(
                             content,
@@ -161,9 +168,12 @@ class ChatFragment : Fragment(), View.OnClickListener {
                         )
                     }.also { messageModel -> chatViewModel.insertMessage(messageModel) }
                 )
+                Log.e("Sepehr", "hi1 ${newList.size} | ${newList.last()}")
                 binding.tvChatNoMessage.visibility = View.GONE
-                binding.messageList.adapter?.notifyItemRangeChanged(0, chatListData.size)
-                binding.messageList.scrollToPosition(chatListData.size.minus(1))
+                messageAdapter.updateData(newList)
+                binding.messageList.scrollToPosition(newList.size.minus(1))
+                chatListData.clear()
+                chatListData.addAll(newList)
             }
         }
 
@@ -233,9 +243,12 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 val messageModel =
                     MessageModel(msg, Date().time, username, roomKey, currentLocation)
                 chatViewModel.insertMessage(messageModel)
-                chatListData.add(messageModel)
+                val newList = mutableListOf<MessageModel>()
+                newList.addAll(chatListData)
+                newList.add(messageModel)
+                Log.e("Sepehr", "hi2 ${newList.size} | ${newList.last()}")
                 binding.tvChatNoMessage.visibility = View.GONE
-                binding.messageList.adapter?.notifyItemRangeChanged(0, chatListData.size)
+                messageAdapter.updateData(newList)
 
                 brokerSharedViewModel.publishMessage(
                     roomKey,
@@ -243,7 +256,9 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 )
 
                 binding.txtMessage.setText("")
-                binding.messageList.scrollToPosition(chatListData.size.minus(1))
+                binding.messageList.scrollToPosition(newList.size.minus(1))
+                chatListData.clear()
+                chatListData.addAll(newList)
             }
 
             binding.chatTitleTextView -> navController.navigate(

@@ -120,6 +120,7 @@ class RoomMapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
             )
 
             uiSettings.apply {
+                isZoomControlsEnabled = true
                 isZoomGesturesEnabled = true
                 isCompassEnabled = true
             }

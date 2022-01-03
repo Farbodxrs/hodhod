@@ -1,9 +1,11 @@
 package ir.hodhod.hodhod.views.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ir.hodhod.hodhod.R
 import ir.hodhod.hodhod.data.models.MessageModel
@@ -12,7 +14,7 @@ import ir.hodhod.hodhod.utils.UsernameSharedPreferences
 
 
 class MessageAdapter(
-    private val dataset: List<MessageModel>
+    private var dataset: List<MessageModel>
 ) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
 
     class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -34,8 +36,12 @@ class MessageAdapter(
 
     override fun getItemCount() = dataset.size
 
+    override fun getItemId(position: Int): Long {
+        return dataset[position].time
+    }
+
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        val item = dataset[position]
+        val item = dataset[holder.adapterPosition]
         val userPreference by lazy {
             UsernameSharedPreferences.initialWith(holder.itemView.context)
         }
@@ -61,5 +67,17 @@ class MessageAdapter(
                 meDate.visibility = View.GONE
             }
         }
+    }
+
+    fun updateData(list: List<MessageModel>) {
+
+        val diffCallback = GeneralDiffCallback(dataset, list)
+        Log.e("Sepehr", "hi3 ${dataset.size} | ${dataset.last()}")
+        Log.e("Sepehr", "hi4 ${list.size} | ${list.last()}")
+
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        dataset = list
+        diffResult.dispatchUpdatesTo(this)
     }
 }
